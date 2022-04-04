@@ -1,0 +1,138 @@
+{
+  "Resources": {
+    "SecurityGroupID6EBC2941": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "RmsInstanceStack/SecurityGroupID",
+        "GroupName": "rms-web-prod-sg",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "from 0.0.0.0/0:22",
+            "FromPort": 22,
+            "IpProtocol": "tcp",
+            "ToPort": 22
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "from 0.0.0.0/0:80",
+            "FromPort": 80,
+            "IpProtocol": "tcp",
+            "ToPort": 80
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "from 0.0.0.0/0:443",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443
+          }
+        ],
+        "VpcId": "vpc-034b29f6e9fba7591"
+      },
+      "Metadata": {
+        "aws:cdk:path": "RmsInstanceStack/SecurityGroupID/Resource"
+      }
+    },
+    "EC2ForAZ2IDInstanceProfile264A903A": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Roles": [
+          "TirthEC2RoleForSSM"
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "RmsInstanceStack/EC2ForAZ2ID/InstanceProfile"
+      }
+    },
+    "EC2ForAZ2IDB9E3B553": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "AvailabilityZone": "me-south-1b",
+        "IamInstanceProfile": {
+          "Ref": "EC2ForAZ2IDInstanceProfile264A903A"
+        },
+        "ImageId": {
+          "Ref": "SsmParameterValueawsserviceamiamazonlinuxlatestamznamihvmx8664gp2C96584B6F00A464EAD1953AFF4B05118Parameter"
+        },
+        "InstanceType": "t3.micro",
+        "KeyName": "TirthBahrain-KP",
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "SecurityGroupID6EBC2941",
+              "GroupId"
+            ]
+          }
+        ],
+        "SubnetId": "subnet-0ea8e6908aef1dc89",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "rms-webserver-prod"
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": "#!/bin/bash"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "RmsInstanceStack/EC2ForAZ2ID/Resource"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WNQQrCMBBFz9J9MrZV8AAuxF2oB5AxTnFsk8gkQUrp3Y1IQVfz/3t8poVmD3WFr6jtbdAjX2E+J7SD6iiGLJZUcZeZbFsE2SycpqOE/FSH3v+Dk48JfVkUs+ZFMTr4AUZCz2PhhRkUdJRIPmX9tygzpXvwmy00NeyqR2TWkn1iR9B97xvZ9gWntgAAAA=="
+      },
+      "Metadata": {
+        "aws:cdk:path": "RmsInstanceStack/CDKMetadata/Default"
+      }
+    }
+  },
+  "Parameters": {
+    "SsmParameterValueawsserviceamiamazonlinuxlatestamznamihvmx8664gp2C96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+      "Default": "/aws/service/ami-amazon-linux-latest/amzn-ami-hvm-x86_64-gp2"
+    },
+    "BootstrapVersion": {
+      "Type": "AWS::SSM::Parameter::Value<String>",
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+    }
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                  ],
+                  {
+                    "Ref": "BootstrapVersion"
+                  }
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+        }
+      ]
+    }
+  }
+}

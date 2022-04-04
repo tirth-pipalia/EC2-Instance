@@ -1,0 +1,20 @@
+{
+  "version": "16.0.0",
+  "files": {
+    "d6eccdd46d2a7e534d18964e2a7bd0a05df5c1988774e35f9fc18d24cfb69c88": {
+      "source": {
+        "path": "RmsInstanceStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "620228650709-me-south-1": {
+          "bucketName": "cdk-hnb659fds-assets-620228650709-me-south-1",
+          "objectKey": "d6eccdd46d2a7e534d18964e2a7bd0a05df5c1988774e35f9fc18d24cfb69c88.json",
+          "region": "me-south-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::620228650709:role/cdk-hnb659fds-file-publishing-role-620228650709-me-south-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}
